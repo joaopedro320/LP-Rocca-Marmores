@@ -37,7 +37,11 @@ Modelo de 3 etapas, igual ao da Pettrus. Envia para a planilha via Apps Script e
 
 Endpoint já configurado no `index.html`. Colunas gravadas: Data, Nome, Telefone, E-mail, Cidade, Ambientes, Etapa da obra, Previsão, Perfil e Origem. O `apps-script.gs` deste pacote já está com essas colunas: **republique o script** se a versão publicada ainda for a antiga.
 
-## 4. Antes de publicar
+## 4. Galeria com zoom
+
+Clicar em qualquer foto da galeria abre a imagem ampliada. O visualizador tem setas, contador, fechamento por clique fora ou tecla Esc, navegação por seta do teclado e arrastar para os lados no celular. Ele respeita o filtro ativo: se estiver em "Cozinhas", as setas circulam só entre as cozinhas.
+
+## 5. Antes de publicar
 
 1. **GTM**: substituir `GTM-XXXXXXX` nos dois pontos do `index.html`.
 2. **Domínio**: substituir `SEUDOMINIO.com.br` no `index.html`, `robots.txt` e `sitemap.xml`.
@@ -45,15 +49,15 @@ Endpoint já configurado no `index.html`. Colunas gravadas: Data, Nome, Telefone
 4. **Avaliações**: seção comentada no HTML, aguardando o link do Google Meu Negócio.
 5. **Cidades**: confirmar a lista da seção de atendimento com o cliente.
 
-## 5. Deploy no Vercel
+## 6. Deploy no Vercel
 
 Framework preset **Other**, sem build command, output na raiz. Subir a pasta inteira.
 
-## 6. Eventos no dataLayer
+## 7. Eventos no dataLayer
 
-`clique_whatsapp` (com `origem`), `form_etapa_concluida` (com `etapa`), `envio_formulario` (com `perfil`, `previsao`, `ambientes`), `filtro_galeria` (com `categoria`), `scroll_50` e `scroll_90`.
+`clique_whatsapp` (com `origem`), `form_etapa_concluida` (com `etapa`), `envio_formulario` (com `perfil`, `previsao`, `ambientes`), `filtro_galeria` (com `categoria`), `abriu_imagem_projeto`, `scroll_50` e `scroll_90`.
 
-## 7. Decisões de conteúdo
+## 8. Decisões de conteúdo
 
 - **Nenhuma menção a instalação ou medição técnica.** O briefing não cita esses serviços, então a copy fala apenas de produção própria, acabamento e entrega no prazo. Se a marmoraria fizer medição e instalação, é só avisar que eu devolvo esses blocos (eles pesam bastante na conversão).
 - **Nenhuma menção ao grupo Somar** em nenhum ponto do código.

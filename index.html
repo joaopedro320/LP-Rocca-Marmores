@@ -200,6 +200,71 @@ background:repeating-linear-gradient(45deg,var(--claro-2),var(--claro-2) 12px,#D
 .cities{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px;}
 .cities span{font-size:.82rem;letter-spacing:.03em;padding:8px 16px;border:1px solid var(--claro-2);color:var(--texto-2);background:#fff;}
 
+
+/* ---------- Lightbox da galeria ---------- */
+var lb = document.getElementById('lightbox');
+var lbImg = document.getElementById('lb-img');
+var lbCap = document.getElementById('lb-cap');
+var lbNum = document.getElementById('lb-num');
+var visiveis = [];
+var atual = 0;
+
+function listaVisivel(){
+  return Array.prototype.filter.call(figuras, function(f){ return !f.hidden; });
+}
+function mostrar(i){
+  if(!visiveis.length) return;
+  atual = (i + visiveis.length) % visiveis.length;
+  var f = visiveis[atual];
+  var img = f.querySelector('img');
+  var cap = f.querySelector('figcaption');
+  lbImg.src = img.getAttribute('src');
+  lbImg.alt = img.getAttribute('alt') || '';
+  lbCap.textContent = cap ? cap.textContent : '';
+  lbNum.textContent = (atual + 1) + ' / ' + visiveis.length;
+}
+function abrir(f){
+  visiveis = listaVisivel();
+  mostrar(visiveis.indexOf(f));
+  lb.classList.add('aberto');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('lb-fechar').focus();
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({event:'abriu_imagem_projeto'});
+}
+function fechar(){
+  lb.classList.remove('aberto');
+  document.body.style.overflow = '';
+  lbImg.src = '';
+}
+Array.prototype.forEach.call(figuras, function(f){
+  f.setAttribute('tabindex','0');
+  f.setAttribute('role','button');
+  f.addEventListener('click', function(){ abrir(f); });
+  f.addEventListener('keydown', function(e){
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); abrir(f); }
+  });
+});
+document.getElementById('lb-fechar').addEventListener('click', fechar);
+document.getElementById('lb-ant').addEventListener('click', function(){ mostrar(atual - 1); });
+document.getElementById('lb-prox').addEventListener('click', function(){ mostrar(atual + 1); });
+lb.addEventListener('click', function(e){ if(e.target === lb) fechar(); });
+document.addEventListener('keydown', function(e){
+  if(!lb.classList.contains('aberto')) return;
+  if(e.key === 'Escape') fechar();
+  if(e.key === 'ArrowLeft') mostrar(atual - 1);
+  if(e.key === 'ArrowRight') mostrar(atual + 1);
+});
+/* arrastar no celular */
+var x0 = null;
+lb.addEventListener('touchstart', function(e){ x0 = e.changedTouches[0].clientX; }, {passive:true});
+lb.addEventListener('touchend', function(e){
+  if(x0 === null) return;
+  var dx = e.changedTouches[0].clientX - x0;
+  if(Math.abs(dx) > 50) mostrar(atual + (dx < 0 ? 1 : -1));
+  x0 = null;
+}, {passive:true});
+
 /* ---------- FAQ ---------- */
 .faq{border-top:1px solid var(--claro-2);}
 .faq:last-of-type{border-bottom:1px solid var(--claro-2);}
@@ -271,6 +336,29 @@ footer h4{font-family:var(--display);font-weight:400;font-size:1rem;color:var(--
 .beneficios li::before{content:"";width:14px;height:1px;background:var(--dourado-claro);flex:none;}
 .disclaimer{font-size:.75rem;color:var(--texto-2);margin-top:16px;line-height:1.5;}
 
+
+/* ---------- Lightbox ---------- */
+.gal figure{cursor:zoom-in;}
+.gal figure::after{content:"";position:absolute;inset:0;background:rgba(13,13,12,0);transition:background .4s var(--ease);pointer-events:none;}
+.gal figure:hover::after{background:rgba(13,13,12,.12);}
+#lightbox{position:fixed;inset:0;z-index:200;background:rgba(13,13,12,.95);display:none;align-items:center;justify-content:center;padding:clamp(12px,4vw,48px);}
+#lightbox.aberto{display:flex;animation:lbIn .3s var(--ease);}
+@keyframes lbIn{from{opacity:0}to{opacity:1}}
+#lightbox figure{margin:0;max-width:min(1100px,100%);max-height:100%;display:flex;flex-direction:column;gap:14px;align-items:center;}
+#lightbox img{max-width:100%;max-height:78svh;width:auto;height:auto;object-fit:contain;}
+#lightbox figcaption{color:var(--texto-claro);font-size:.85rem;letter-spacing:.04em;text-align:center;}
+.lb-btn{position:absolute;background:transparent;border:1px solid rgba(242,240,236,.3);color:var(--claro);width:52px;height:52px;border-radius:50%;cursor:pointer;font-size:1.3rem;line-height:1;display:flex;align-items:center;justify-content:center;transition:.3s var(--ease);}
+.lb-btn:hover{background:var(--claro);color:var(--preto);border-color:var(--claro);}
+#lb-fechar{top:clamp(12px,3vw,28px);right:clamp(12px,3vw,28px);}
+#lb-ant{left:clamp(10px,2.5vw,28px);top:50%;transform:translateY(-50%);}
+#lb-prox{right:clamp(10px,2.5vw,28px);top:50%;transform:translateY(-50%);}
+.lb-contador{position:absolute;bottom:clamp(14px,3vw,28px);left:50%;transform:translateX(-50%);color:var(--texto-claro);font-size:.78rem;letter-spacing:.16em;}
+@media (max-width:560px){
+  .lb-btn{width:44px;height:44px;}
+  #lb-ant{left:6px;} #lb-prox{right:6px;}
+  #lightbox img{max-height:66svh;}
+}
+
 /* ---------- Reveal ---------- */
 .reveal{opacity:0;transform:translateY(22px);transition:opacity .9s var(--ease),transform .9s var(--ease);}
 .reveal.in{opacity:1;transform:none;}
@@ -292,13 +380,76 @@ footer h4{font-family:var(--display);font-weight:400;font-size:1rem;color:var(--
   .amb{flex-direction:column;gap:6px;}
 }
 @media (max-width:560px){
-  .g-2,.g-4,.form-row,.gal{grid-template-columns:1fr;}
+  .g-2,.g-4,.form-row{grid-template-columns:1fr;}
+  .gal{grid-template-columns:repeat(2,1fr);gap:8px;}
   .hero h1,.hero .lead{max-width:none;}
   .hero{min-height:auto;}
   .hero-actions{flex-direction:column;align-items:stretch;}
   .signals{grid-template-columns:1fr 1fr;}
   .foot-grid{grid-template-columns:1fr;}
 }
+
+/* ============================================================
+   AJUSTE FINO RESPONSIVO
+   ============================================================ */
+img,svg{height:auto;}
+body{-webkit-tap-highlight-color:rgba(176,141,87,.18);}
+section[id],div[id]{scroll-margin-top:96px;}
+.mobile-menu{overflow-y:auto;}
+.filtros{scrollbar-width:none;}
+.filtros::-webkit-scrollbar{display:none;}
+
+/* Tablet */
+@media (min-width:861px) and (max-width:1180px){
+  :root{--pad:clamp(24px,4vw,48px);}
+  .gal{grid-template-columns:repeat(3,1fr);}
+  .g-4{grid-template-columns:repeat(2,1fr);}
+  .hero-marca{width:40%;opacity:.4;}
+  .nav-links{gap:22px;}
+  .nav-links a{font-size:.8rem;}
+}
+
+/* Telas de toque: evita hover travado e amplia alvos */
+@media (hover:none){
+  .mat:hover,.gal figure:hover img,.amb:hover{transform:none;padding-left:0;}
+  .gal figure:hover::after{background:rgba(13,13,12,0);}
+  .btn{min-height:52px;}
+  .chip{min-height:46px;}
+  .filtro{min-height:46px;}
+}
+
+/* Celular */
+@media (max-width:560px){
+  section[id],div[id]{scroll-margin-top:74px;}
+  /* iOS deixa de dar zoom no campo quando a fonte tem 16px */
+  .field input,.field select,.field textarea{font-size:16px;padding:15px 14px;}
+  .form-box{padding:22px 18px;}
+  .acoes{flex-wrap:wrap;}
+  .acoes .btn{flex:1 1 100%;}
+  .btn-voltar{order:2;flex:1 1 100% !important;}
+  .avancar{order:1;}
+  .gal figcaption{font-size:.68rem;padding:10px;}
+  .signals div{padding:16px 12px 0 0;}
+  .cities span{font-size:.76rem;padding:7px 12px;}
+  .faq button{padding:18px 38px 18px 0;font-size:1rem;}
+  .filtros{flex-wrap:nowrap;overflow-x:auto;padding-bottom:6px;margin-bottom:18px;}
+  .filtro{white-space:nowrap;flex:none;}
+  .brand img{height:34px;}
+  header{padding-block:12px;}
+  header.scrolled{padding-block:8px;}
+}
+
+/* Telas muito estreitas */
+@media (max-width:360px){
+  .signals{grid-template-columns:1fr;}
+  .gal{grid-template-columns:1fr;}
+}
+
+/* Telas largas */
+@media (min-width:1600px){
+  :root{--max:1360px;}
+}
+
 @media (prefers-reduced-motion:reduce){
   *{animation:none !important;transition:none !important;}
   .reveal{opacity:1;transform:none;}
@@ -342,10 +493,10 @@ footer h4{font-family:var(--display);font-weight:400;font-size:1rem;color:var(--
 <!-- ==================== HERO ==================== -->
 <section class="hero" id="top">
   <div class="hero-bg">
-    <img src="/img/textura-pedra.jpg" alt="" aria-hidden="true" fetchpriority="high">
+    <img src="/img/textura-pedra.jpg" alt="" aria-hidden="true" fetchpriority="high" width="1400" height="700">
   </div>
   <div class="hero-marca" aria-hidden="true">
-    <img src="/img/marca-monograma.jpg" alt="">
+    <img src="/img/marca-monograma.jpg" alt="" width="1000" height="1000">
   </div>
   <div class="wrap">
     <div class="hero-inner">
@@ -451,75 +602,75 @@ footer h4{font-family:var(--display);font-weight:400;font-size:1rem;color:var(--
     <div class="gal reveal" id="galeria">
 
       <figure data-cat="cozinha">
-        <img src="/img/cozinha-01.jpg" alt="Cozinha com bancada e ilha em granito preto" loading="lazy">
+        <img src="/img/cozinha-01.jpg" alt="Cozinha com bancada e ilha em granito preto" loading="lazy" decoding="async">
         <figcaption>Cozinha · Bancada em granito preto</figcaption>
       </figure>
       <figure data-cat="cozinha">
-        <img src="/img/cozinha-02.jpg" alt="Bancada de cozinha em pedra cinza com marcenaria escura" loading="lazy">
+        <img src="/img/cozinha-02.jpg" alt="Bancada de cozinha em pedra cinza com marcenaria escura" loading="lazy" decoding="async">
         <figcaption>Cozinha · Bancada e frontão</figcaption>
       </figure>
       <figure data-cat="cozinha">
-        <img src="/img/cozinha-03.jpg" alt="Ilha de cozinha em granito preto com tampo de madeira" loading="lazy">
+        <img src="/img/cozinha-03.jpg" alt="Ilha de cozinha em granito preto com tampo de madeira" loading="lazy" decoding="async">
         <figcaption>Cozinha · Ilha em granito preto</figcaption>
       </figure>
       <figure data-cat="cozinha">
-        <img src="/img/cozinha-04.jpg" alt="Cozinha integrada com bancada em pedra e iluminação embutida" loading="lazy">
+        <img src="/img/cozinha-04.jpg" alt="Cozinha integrada com bancada em pedra e iluminação embutida" loading="lazy" decoding="async">
         <figcaption>Cozinha · Integrada</figcaption>
       </figure>
       <figure data-cat="banheiro">
-        <img src="/img/banheiro-01.jpg" alt="Lavabo com bancada em porcelanato e parede em travertino" loading="lazy">
+        <img src="/img/banheiro-01.jpg" alt="Lavabo com bancada em porcelanato e parede em travertino" loading="lazy" decoding="async">
         <figcaption>Lavabo · Bancada em porcelanato</figcaption>
       </figure>
       <figure data-cat="banheiro">
-        <img src="/img/banheiro-02.jpg" alt="Prateleira em porcelanato sobre parede de travertino" loading="lazy">
+        <img src="/img/banheiro-02.jpg" alt="Prateleira em porcelanato sobre parede de travertino" loading="lazy" decoding="async">
         <figcaption>Lavabo · Prateleira e revestimento</figcaption>
       </figure>
       <figure data-cat="banheiro">
-        <img src="/img/banheiro-03.jpg" alt="Bancada de lavatório em pedra clara com cuba de apoio" loading="lazy">
+        <img src="/img/banheiro-03.jpg" alt="Bancada de lavatório em pedra clara com cuba de apoio" loading="lazy" decoding="async">
         <figcaption>Lavatório · Bancada em pedra clara</figcaption>
       </figure>
       <figure data-cat="banheiro">
-        <img src="/img/banheiro-05.jpg" alt="Cuba esculpida em pedra clara com metal dourado" loading="lazy">
+        <img src="/img/banheiro-05.jpg" alt="Cuba esculpida em pedra clara com metal dourado" loading="lazy" decoding="async">
         <figcaption>Lavatório · Cuba esculpida</figcaption>
       </figure>
       <figure data-cat="escada">
-        <img src="/img/escada-01.jpg" alt="Escada com degraus em granito preto escovado" loading="lazy">
+        <img src="/img/escada-01.jpg" alt="Escada com degraus em granito preto escovado" loading="lazy" decoding="async">
         <figcaption>Escada · Granito preto escovado</figcaption>
       </figure>
       <figure data-cat="escada">
-        <img src="/img/escada-02.jpg" alt="Escada em granito preto com guarda-corpo de ferro" loading="lazy">
+        <img src="/img/escada-02.jpg" alt="Escada em granito preto com guarda-corpo de ferro" loading="lazy" decoding="async">
         <figcaption>Escada · Degraus e espelhos</figcaption>
       </figure>
       <figure data-cat="escada">
-        <img src="/img/escada-03.jpg" alt="Vista superior de escada em granito preto" loading="lazy">
+        <img src="/img/escada-03.jpg" alt="Vista superior de escada em granito preto" loading="lazy" decoding="async">
         <figcaption>Escada · Vista superior</figcaption>
       </figure>
       <figure data-cat="mesas">
-        <img src="/img/mesa-01.jpg" alt="Mesa de apoio em mármore com base bruta" loading="lazy">
+        <img src="/img/mesa-01.jpg" alt="Mesa de apoio em mármore com base bruta" loading="lazy" decoding="async">
         <figcaption>Mesa de apoio · Mármore bege</figcaption>
       </figure>
       <figure data-cat="mesas">
-        <img src="/img/mesa-02.jpg" alt="Mesa redonda em travertino romano" loading="lazy">
+        <img src="/img/mesa-02.jpg" alt="Mesa redonda em travertino romano" loading="lazy" decoding="async">
         <figcaption>Mesa · Travertino romano</figcaption>
       </figure>
       <figure data-cat="mesas">
-        <img src="/img/mesa-03.jpg" alt="Mesa de escritório em travertino com cadeiras claras" loading="lazy">
+        <img src="/img/mesa-03.jpg" alt="Mesa de escritório em travertino com cadeiras claras" loading="lazy" decoding="async">
         <figcaption>Mesa de escritório · Travertino</figcaption>
       </figure>
       <figure data-cat="mesas">
-        <img src="/img/mesa-04.jpg" alt="Peças decorativas esculpidas em travertino" loading="lazy">
+        <img src="/img/mesa-04.jpg" alt="Peças decorativas esculpidas em travertino" loading="lazy" decoding="async">
         <figcaption>Peças esculpidas · Travertino</figcaption>
       </figure>
       <figure data-cat="corporativo">
-        <img src="/img/corporativo-01.jpg" alt="Balcão de recepção em ônix retroiluminado" loading="lazy">
+        <img src="/img/corporativo-01.jpg" alt="Balcão de recepção em ônix retroiluminado" loading="lazy" decoding="async">
         <figcaption>Recepção · Ônix retroiluminado</figcaption>
       </figure>
       <figure data-cat="corporativo">
-        <img src="/img/corporativo-02.jpg" alt="Balcão comercial com tampo em pedra clara" loading="lazy">
+        <img src="/img/corporativo-02.jpg" alt="Balcão comercial com tampo em pedra clara" loading="lazy" decoding="async">
         <figcaption>Balcão comercial · Tampo em pedra</figcaption>
       </figure>
       <figure data-cat="corporativo">
-        <img src="/img/corporativo-03.jpg" alt="Mesa de reunião em travertino em ambiente corporativo" loading="lazy">
+        <img src="/img/corporativo-03.jpg" alt="Mesa de reunião em travertino em ambiente corporativo" loading="lazy" decoding="async">
         <figcaption>Corporativo · Mesa de reunião</figcaption>
       </figure>
 
@@ -537,7 +688,7 @@ footer h4{font-family:var(--display);font-weight:400;font-size:1rem;color:var(--
       <p style="margin:10px 0 0;color:var(--texto-2);font-size:.95rem">Segunda a sexta, das 7h às 17h. (37) 99972-7000</p>
     </div>
     <a href="https://wa.me/5537999727000?text=Ol%C3%A1%2C%20vi%20o%20site%20de%20voc%C3%AAs%20no%20Google%20e%20gostaria%20de%20solicitar%20um%20or%C3%A7amento%2C%20por%20favor!" class="btn btn-wpp wpp" data-origem="faixa" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24" aria-hidden="true" width="20" height="20" fill="currentColor"><path d="M17.47 14.38c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.53.15-.18.2-.3.3-.5.1-.2.05-.38-.03-.53-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.38-.27.3-1.04 1.01-1.04 2.47s1.06 2.86 1.21 3.06c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35zM12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.87 9.87 0 004.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0012.04 2z"/></svg>
+      <svg viewBox="0 0 32 32" aria-hidden="true" width="22" height="22" fill="currentColor"><path d="M16.004 0h-.008C7.174 0 .001 7.176.001 16c0 3.5 1.128 6.744 3.046 9.376L1.05 31.28l6.107-1.952A15.9 15.9 0 0016.004 32C24.83 32 32 24.822 32 16S24.83 0 16.004 0zm9.31 22.594c-.386 1.09-1.918 1.994-3.14 2.258-.836.178-1.928.32-5.604-1.204-4.702-1.948-7.73-6.726-7.966-7.036-.226-.31-1.9-2.53-1.9-4.826 0-2.296 1.166-3.414 1.636-3.894.386-.394.104-.618.71-.618.196 0 .372.01.53.018.47.02.706.048 1.016.79.386.93 1.326 3.226 1.438 3.462.114.236.228.556.068.866-.15.32-.282.462-.518.734-.236.272-.46.48-.696.772-.216.254-.46.526-.188.996.272.46 1.212 1.994 2.596 3.226 1.786 1.59 3.234 2.098 3.752 2.314.386.16.846.122 1.128-.178.358-.386.8-1.026 1.25-1.656.32-.452.724-.508 1.148-.348.432.15 2.718 1.28 3.188 1.514.47.236.78.348.894.546.112.198.112 1.134-.274 2.224z"/></svg>
       Falar no WhatsApp
     </a>
   </div>
@@ -598,7 +749,7 @@ footer h4{font-family:var(--display);font-weight:400;font-size:1rem;color:var(--
       </div>
     </div>
     <figure class="marca-box reveal" style="margin:0">
-      <img src="/img/destaque-recepcao.jpg" alt="Balcão de recepção em ônix retroiluminado executado pela ROCCA" loading="lazy">
+      <img src="/img/destaque-recepcao.jpg" alt="Balcão de recepção em ônix retroiluminado executado pela ROCCA" loading="lazy" decoding="async">
     </figure>
   </div>
 </section>
@@ -770,6 +921,18 @@ footer h4{font-family:var(--display);font-weight:400;font-size:1rem;color:var(--
   </div>
 </footer>
 
+
+
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="Visualização ampliada do projeto">
+  <button class="lb-btn" id="lb-fechar" aria-label="Fechar">&#10005;</button>
+  <button class="lb-btn" id="lb-ant" aria-label="Imagem anterior">&#8249;</button>
+  <button class="lb-btn" id="lb-prox" aria-label="Próxima imagem">&#8250;</button>
+  <figure>
+    <img id="lb-img" src="" alt="">
+    <figcaption id="lb-cap"></figcaption>
+  </figure>
+  <span class="lb-contador" id="lb-num"></span>
+</div>
 
 <!-- ==================== JSON-LD ==================== -->
 <script type="application/ld+json">
