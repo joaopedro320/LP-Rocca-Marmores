@@ -123,14 +123,16 @@ header.scrolled .brand img{height:clamp(32px,3.6vw,42px);}
 .hero-bg{position:absolute;inset:0;}
 .hero-bg img{width:100%;height:100%;object-fit:cover;opacity:.9;}
 .hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,rgba(13,13,12,.96) 0%,rgba(13,13,12,.82) 52%,rgba(13,13,12,.6) 100%);}
-.hero-inner{position:relative;z-index:2;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(32px,5vw,72px);align-items:center;width:100%;}
-.hero h1{color:var(--claro);max-width:14ch;}
+.hero-inner{position:relative;z-index:2;width:100%;max-width:760px;}
+.hero h1{color:var(--claro);max-width:13ch;}
 .hero h1 em{font-style:normal;color:var(--dourado-claro);}
 .hero .lead{margin-top:22px;color:var(--texto-claro);max-width:46ch;}
 .hero-actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:34px;}
-.hero-mark{position:relative;}
-.hero-mark img{width:100%;border:1px solid rgba(176,141,87,.32);}
-.hero-mark figcaption{position:absolute;left:0;bottom:-30px;font-size:.7rem;letter-spacing:.24em;text-transform:uppercase;color:var(--dourado);}
+.hero-marca{position:absolute;right:-4%;top:50%;transform:translateY(-50%);width:min(46%,560px);z-index:1;pointer-events:none;
+mix-blend-mode:screen;opacity:.5;
+-webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 42%,#000 100%);
+mask-image:linear-gradient(90deg,transparent 0%,#000 42%,#000 100%);}
+.hero-marca img{width:100%;}
 
 .signals{margin-top:clamp(44px,6vw,68px);border-top:1px solid rgba(242,240,236,.16);display:grid;grid-template-columns:repeat(4,1fr);position:relative;z-index:2;}
 .signals div{padding:22px 18px 0 0;}
@@ -275,10 +277,11 @@ footer h4{font-family:var(--display);font-weight:400;font-size:1rem;color:var(--
 @media (max-width:1024px){
   .g-4{grid-template-columns:repeat(2,1fr);}
   .split,.hero-inner{grid-template-columns:1fr;}
-  .hero-mark{max-width:420px;}
+  .hero-marca{width:38%;opacity:.35;}
   .foot-grid{grid-template-columns:1fr 1fr;}
 }
 @media (max-width:860px){
+  .hero-marca{display:none;}
   .nav-links,.nav .btn{display:none;}
   .burger{display:block;}
   .gal{grid-template-columns:repeat(2,1fr);}
@@ -339,6 +342,9 @@ footer h4{font-family:var(--display);font-weight:400;font-size:1rem;color:var(--
   <div class="hero-bg">
     <img src="/img/textura-pedra.jpg" alt="" aria-hidden="true" fetchpriority="high">
   </div>
+  <div class="hero-marca" aria-hidden="true">
+    <img src="/img/marca-monograma.jpg" alt="">
+  </div>
   <div class="wrap">
     <div class="hero-inner">
       <div>
@@ -350,9 +356,6 @@ footer h4{font-family:var(--display);font-weight:400;font-size:1rem;color:var(--
           <a href="#orcamento" class="btn btn-ghost" style="color:var(--claro)">Pedir orçamento pelo site</a>
         </div>
       </div>
-      <figure class="hero-mark" style="margin:0">
-        <img src="/img/marca-monograma.jpg" alt="Monograma ROCCA em latão sobre painel escuro, com preenchimento em mármore" width="1254" height="1254">
-      </figure>
     </div>
     <div class="signals">
       <div><strong>30+</strong><span>anos de mercado</span></div>
@@ -796,7 +799,7 @@ footer h4{font-family:var(--display);font-weight:400;font-size:1rem;color:var(--
 
 <script>
 /* ============ Endpoint do Google Apps Script (colar a URL publicada) ============ */
-var ENDPOINT = "";
+var ENDPOINT = "https://script.google.com/macros/s/AKfycbxH1Sh4fSC17H7fZ_FoczuqXcppjc44zV0emuSpY0b-UAJ6ky-vMZwckcuOetIgxJg5/exec";
 var WPP = "5537999727000";
 var MSG_POS_FORM = "Olá, vim do Google e acabei de preencher o formulário no site.";
 
@@ -823,35 +826,7 @@ menu.querySelectorAll('a').forEach(function(a){
 });
 
 
-/* ---------- Faixa CTA WhatsApp ---------- */
-.faixa-wpp{background:var(--travertino);padding-block:clamp(38px,5vw,58px);}
-.faixa-inner{display:flex;align-items:center;justify-content:space-between;gap:28px;flex-wrap:wrap;}
-.btn-wpp{background:#128C7E;color:#fff;padding:18px 32px;}
-.btn-wpp:hover{background:var(--preto);color:#fff;}
-@media (max-width:640px){ .faixa-inner{flex-direction:column;align-items:flex-start;} .btn-wpp{width:100%;} }
 
-/* ---------- Formulário multi-etapas ---------- */
-.passos{display:flex;align-items:center;gap:10px;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--dourado);margin-bottom:8px;}
-.barra{height:2px;background:var(--claro-2);margin:14px 0 26px;position:relative;overflow:hidden;}
-.barra i{position:absolute;left:0;top:0;bottom:0;background:var(--dourado);width:33.33%;transition:width .5s var(--ease);}
-.etapa{display:none;}
-.etapa.ativa{display:block;animation:fadeUp .5s var(--ease);}
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
-.chips{display:flex;flex-wrap:wrap;gap:10px;}
-.chip{border:1px solid var(--claro-2);background:#fff;color:var(--texto-2);padding:11px 18px;font-size:.86rem;cursor:pointer;border-radius:2px;transition:.3s var(--ease);}
-.chip:hover{border-color:var(--dourado);color:var(--texto);}
-.chip.on{background:var(--preto);border-color:var(--preto);color:var(--claro);}
-.acoes{display:flex;gap:12px;margin-top:26px;}
-.acoes .btn{flex:1;}
-.btn-voltar{background:transparent;border:1px solid var(--claro-2);color:var(--texto-2);flex:0 0 auto !important;padding-inline:22px;}
-.btn-voltar:hover{border-color:var(--texto-2);color:var(--texto);background:transparent;}
-.avancar{background:var(--dourado);color:#fff;border:0;}
-.avancar:hover{background:var(--preto);}
-.avancar[disabled]{background:var(--claro-2);cursor:not-allowed;}
-.beneficios{list-style:none;padding:0;margin:26px 0 0;}
-.beneficios li{display:flex;gap:12px;align-items:center;color:var(--texto-claro);font-size:.9rem;padding:7px 0;}
-.beneficios li::before{content:"";width:14px;height:1px;background:var(--dourado-claro);flex:none;}
-.disclaimer{font-size:.75rem;color:var(--texto-2);margin-top:16px;line-height:1.5;}
 
 /* ---------- Reveal ---------- */
 var io = new IntersectionObserver(function(entries){
