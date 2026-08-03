@@ -18,8 +18,8 @@ function doPost(e) {
              || SpreadsheetApp.getActiveSpreadsheet().insertSheet('Leads');
 
     if (sheet.getLastRow() === 0) {
-      sheet.appendRow(['Data', 'Nome', 'Telefone', 'E-mail', 'Cidade', 'Ambiente', 'Material', 'Perfil', 'Origem']);
-      sheet.getRange(1, 1, 1, 9).setFontWeight('bold');
+      sheet.appendRow(['Data', 'Nome', 'Telefone', 'E-mail', 'Cidade', 'Ambientes', 'Etapa da obra', 'Previsão', 'Perfil', 'Origem']);
+      sheet.getRange(1, 1, 1, 10).setFontWeight('bold');
     }
 
     var d = JSON.parse(e.postData.contents);
@@ -30,8 +30,9 @@ function doPost(e) {
       d.telefone || '',
       d.email || '',
       d.cidade || '',
-      d.ambiente || '',
-      d.material || '',
+      d.ambientes || '',
+      d.etapaObra || '',
+      d.previsao || '',
       d.perfil || '',
       d.origem || ''
     ]);
