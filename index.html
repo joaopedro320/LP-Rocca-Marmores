@@ -31,7 +31,7 @@
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-N7NR8975');</script>
+})(window,document,'script','dataLayer','GTM-XXXXXXX');</script>
 <!-- End Google Tag Manager -->
 
 <style>
@@ -209,8 +209,10 @@ var lbNum = document.getElementById('lb-num');
 var visiveis = [];
 var atual = 0;
 
+var extras = Array.prototype.slice.call(document.querySelectorAll('.ampliar'));
 function listaVisivel(){
-  return Array.prototype.filter.call(figuras, function(f){ return !f.hidden; });
+  var daGaleria = Array.prototype.filter.call(figuras, function(f){ return !f.hidden; });
+  return daGaleria.concat(extras);
 }
 function mostrar(i){
   if(!visiveis.length) return;
@@ -237,7 +239,7 @@ function fechar(){
   document.body.style.overflow = '';
   lbImg.src = '';
 }
-Array.prototype.forEach.call(figuras, function(f){
+Array.prototype.concat.call([], Array.prototype.slice.call(figuras), extras).forEach(function(f){
   f.setAttribute('tabindex','0');
   f.setAttribute('role','button');
   f.addEventListener('click', function(){ abrir(f); });
@@ -338,6 +340,8 @@ footer h4{font-family:var(--display);font-weight:400;font-size:1rem;color:var(--
 
 
 /* ---------- Lightbox ---------- */
+.ampliar{cursor:zoom-in;position:relative;}
+.cap-oculta{display:none;}
 .gal figure{cursor:zoom-in;}
 .gal figure::after{content:"";position:absolute;inset:0;background:rgba(13,13,12,0);transition:background .4s var(--ease);pointer-events:none;}
 .gal figure:hover::after{background:rgba(13,13,12,.12);}
@@ -460,8 +464,7 @@ section[id],div[id]{scroll-margin-top:96px;}
 <body>
 
 <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N7NR8975"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
 <!-- ==================== HEADER ==================== -->
@@ -515,7 +518,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div><strong>30+</strong><span>anos de mercado</span></div>
       <div><strong>150 km</strong><span>raio de atendimento</span></div>
       <div><strong>Própria</strong><span>estrutura de produção</span></div>
-      <div><strong>Seg a Sex</strong><span>7h às 17h</span></div>
+      <div><strong>Seg a Sex</strong><span>7h às 17h, sexta até 16h</span></div>
     </div>
   </div>
 </section>
@@ -686,7 +689,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div>
       <p class="eyebrow" style="margin-bottom:12px">Atendimento direto</p>
       <h2 style="font-size:clamp(1.4rem,2.8vw,2.1rem)">Fale com quem vai executar a sua obra.</h2>
-      <p style="margin:10px 0 0;color:var(--texto-2);font-size:.95rem">Segunda a sexta, das 7h às 17h. (37) 99972-7000</p>
+      <p style="margin:10px 0 0;color:var(--texto-2);font-size:.95rem">Segunda a quinta, das 7h às 17h. Sexta, das 7h às 16h. (37) 99972-7000</p>
     </div>
     <a href="https://wa.me/5537999727000?text=Ol%C3%A1%2C%20vi%20o%20site%20de%20voc%C3%AAs%20no%20Google%20e%20gostaria%20de%20solicitar%20um%20or%C3%A7amento%2C%20por%20favor!" class="btn btn-wpp wpp" data-origem="faixa" target="_blank" rel="noopener">
       <svg viewBox="0 0 32 32" aria-hidden="true" width="22" height="22" fill="currentColor"><path d="M16.004 0h-.008C7.174 0 .001 7.176.001 16c0 3.5 1.128 6.744 3.046 9.376L1.05 31.28l6.107-1.952A15.9 15.9 0 0016.004 32C24.83 32 32 24.822 32 16S24.83 0 16.004 0zm9.31 22.594c-.386 1.09-1.918 1.994-3.14 2.258-.836.178-1.928.32-5.604-1.204-4.702-1.948-7.73-6.726-7.966-7.036-.226-.31-1.9-2.53-1.9-4.826 0-2.296 1.166-3.414 1.636-3.894.386-.394.104-.618.71-.618.196 0 .372.01.53.018.47.02.706.048 1.016.79.386.93 1.326 3.226 1.438 3.462.114.236.228.556.068.866-.15.32-.282.462-.518.734-.236.272-.46.48-.696.772-.216.254-.46.526-.188.996.272.46 1.212 1.994 2.596 3.226 1.786 1.59 3.234 2.098 3.752 2.314.386.16.846.122 1.128-.178.358-.386.8-1.026 1.25-1.656.32-.452.724-.508 1.148-.348.432.15 2.718 1.28 3.188 1.514.47.236.78.348.894.546.112.198.112 1.134-.274 2.224z"/></svg>
@@ -749,8 +752,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div><h3 style="font-size:1.08rem;margin-bottom:8px">Pontualidade</h3><p style="font-size:.9rem;margin:0">Prazo definido na aprovação do orçamento e cumprido na entrega.</p></div>
       </div>
     </div>
-    <figure class="marca-box reveal" style="margin:0">
-      <img src="/img/destaque-recepcao.jpg" alt="Balcão de recepção em ônix retroiluminado executado pela ROCCA" loading="lazy" decoding="async">
+    <figure class="marca-box reveal ampliar" style="margin:0">
+      <img src="/img/destaque-recepcao.jpg" alt="Balcão de recepção em ônix retroiluminado executado pela ROCCA" loading="lazy" decoding="async"><figcaption class="cap-oculta">Recepção · Ônix retroiluminado</figcaption>
     </figure>
   </div>
 </section>
@@ -813,7 +816,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <h2>Responda três telas. O comercial continua no WhatsApp.</h2>
       <p class="lead" style="margin-top:16px">Não é preço por metro quadrado. São as informações que a equipe precisa para dar um retorno técnico de verdade sobre a sua obra.</p>
       <ul class="beneficios">
-        <li>Resposta de segunda a sexta, das 7h às 17h</li>
+        <li>Resposta de segunda a quinta das 7h às 17h e sexta das 7h às 16h</li>
         <li>Quem responde é o comercial, não um robô</li>
         <li>Sem compromisso</li>
       </ul>
@@ -908,11 +911,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
       <div>
         <h4>Contato</h4>
-        <p><a href="https://wa.me/5537999727000?text=Ol%C3%A1%2C%20vi%20o%20site%20de%20voc%C3%AAs%20no%20Google%20e%20gostaria%20de%20solicitar%20um%20or%C3%A7amento%2C%20por%20favor!" class="wpp" data-origem="footer" target="_blank" rel="noopener">(37) 99972-7000</a><br>Segunda a sexta, 7h às 17h</p>
+        <p><a href="https://wa.me/5537999727000?text=Ol%C3%A1%2C%20vi%20o%20site%20de%20voc%C3%AAs%20no%20Google%20e%20gostaria%20de%20solicitar%20um%20or%C3%A7amento%2C%20por%20favor!" class="wpp" data-origem="footer" target="_blank" rel="noopener">(37) 99972-7000</a><br>Segunda a quinta, 7h às 17h<br>Sexta, 7h às 16h</p>
       </div>
       <div>
         <h4>Endereço</h4>
-        <p>R. Goiás, 2988 - Orion <br>Divinópolis - MG, 35502-453<br></p>
+        <p>ENDEREÇO PENDENTE<br>Divinópolis, MG<br></p>
       </div>
     </div>
     <div class="foot-bottom">
@@ -958,8 +961,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       "url":"https://SEUDOMINIO.com.br/",
       "telephone":"+5537999727000",
       "priceRange":"$$$",
-      "address":{"@type":"PostalAddress","streetAddress":"R. Goiás, 2988 - Orion, Divinópolis - MG","addressLocality":"Divinópolis","addressRegion":"MG","postalCode":"5502-453","addressCountry":"BR"},
-      "openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens":"07:00","closes":"17:00"}],
+      "address":{"@type":"PostalAddress","streetAddress":"ENDERECO PENDENTE","addressLocality":"Divinópolis","addressRegion":"MG","postalCode":"CEP PENDENTE","addressCountry":"BR"},
+      "openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday"],"opens":"07:00","closes":"17:00"},{"@type":"OpeningHoursSpecification","dayOfWeek":["Friday"],"opens":"07:00","closes":"16:00"}],
       "areaServed":[
         {"@type":"City","name":"Divinópolis"},{"@type":"City","name":"Itaúna"},
         {"@type":"City","name":"Nova Serrana"},{"@type":"City","name":"Cláudio"},

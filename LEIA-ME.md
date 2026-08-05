@@ -39,7 +39,9 @@ Endpoint já configurado no `index.html`. Colunas gravadas: Data, Nome, Telefone
 
 ## 4. Galeria com zoom
 
-Clicar em qualquer foto da galeria abre a imagem ampliada. O visualizador tem setas, contador, fechamento por clique fora ou tecla Esc, navegação por seta do teclado e arrastar para os lados no celular. Ele respeita o filtro ativo: se estiver em "Cozinhas", as setas circulam só entre as cozinhas.
+Clicar em qualquer foto da página, da galeria ou da seção institucional, abre a imagem ampliada. O visualizador tem setas, contador, fechamento por clique fora ou tecla Esc, navegação por seta do teclado e arrastar para os lados no celular. Ele respeita o filtro ativo: se estiver em "Cozinhas", as setas circulam entre as cozinhas e a foto da seção institucional.
+
+Horário de atendimento usado em toda a página: segunda a quinta das 7h às 17h e sexta das 7h às 16h.
 
 ## 5. Antes de publicar
 
